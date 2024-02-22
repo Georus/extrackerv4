@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export const Schema = z.object({
 	id: z.number().optional(),
-	amount: z.number().positive(),
+	amount: z.coerce.number().positive(),
 	name: z.string().min(1).max(50),
 	category: z.enum(['food', 'pet', 'vehicle', 'housing', 'lifestyle'], {
 		errorMap: () => ({ message: 'Category selected required' })

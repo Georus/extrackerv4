@@ -10,13 +10,28 @@
 	import { cn } from '$lib/utils';
 	import { DateFormatter, getLocalTimeZone, type DateValue } from '@internationalized/date';
 	import { Calendar as CalendarIcon } from 'lucide-svelte';
+	export let data;
 
 	let value: DateValue | undefined = undefined;
-	let name = 'torito';
-	let amount = 800;
-	let status = '';
+	let name: string;
+	let amount: number;
+	let status: string;
 	let selection: Selection;
 	let validation: any;
+
+	async function getExp() {
+		const expense = await db.expenses.get(parseInt(data.exp.id));
+		if (expense) {
+			name = expense.name;
+			amount = expense.amount;
+			selection = {
+				value: expense.category,
+				label: expense.category.charAt(0).toUpperCase() + expense.category.slice(1),
+				disabled: false
+			};
+		}
+	}
+	getExp();
 
 	interface Selection {
 		value: 'food' | 'pet' | 'vehicle' | 'housing' | 'lifestyle';
@@ -28,7 +43,7 @@
 		dateStyle: 'long'
 	});
 
-	async function addExpense() {
+	async function putExpense() {
 		let spendDate: Date;
 
 		if (value) spendDate = value.toDate('UTC');
@@ -44,7 +59,8 @@
 		console.log(validation);
 
 		try {
-			const id = await db.expenses.add({
+			const id = await db.expenses.put({
+				id: parseInt(data.exp.id),
 				name,
 				amount,
 				category: selection.value,
@@ -56,6 +72,14 @@
 			goto('/');
 		} catch (error) {
 			status = `failed to add ${name}`;
+		}
+	}
+	async function delExpense() {
+		try {
+			await db.expenses.delete(parseInt(data.exp.id));
+			goto('/');
+		} catch (error) {
+			console.error(error);
 		}
 	}
 </script>
@@ -108,6 +132,7 @@
 				<Calendar bind:value initialFocus />
 			</Popover.Content>
 		</Popover.Root>
-		<Button class="mt-4" on:click={addExpense}>Add Expense</Button>
+		<Button class="mt-4" on:click={putExpense}>Update</Button>
+		<Button variant="destructive" class="mt-4" on:click={delExpense}>Delete</Button>
 	</fieldset>
 </div>

@@ -1,5 +1,6 @@
 <script>
 	import { Button } from '$lib/components/ui/button';
+	import Chart from './Chart.svelte';
 	import List from './list.svelte';
 </script>
 
@@ -8,4 +9,5 @@
 	<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 	<Button href="/create">Create</Button>
 	<List />
+	<Chart />
 </main>

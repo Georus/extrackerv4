@@ -21,7 +21,7 @@
 					</Accordion.Trigger>
 					<Accordion.Content>
 						{exp.payDate}
-						<a href={exp.id?.toString()}>edit</a>
+						<a href={'edit/' + exp.id?.toString()}>edit</a>
 						<span>{exp.id}</span>
 					</Accordion.Content>
 				</Accordion.Item>
