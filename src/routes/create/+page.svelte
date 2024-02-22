@@ -16,6 +16,7 @@
 	let amount = 800;
 	let status = '';
 	let selection: Selection;
+	let validation: any;
 
 	interface Selection {
 		value: 'food' | 'pet' | 'vehicle' | 'housing' | 'lifestyle';
@@ -33,22 +34,10 @@
 		if (value) spendDate = value.toDate('UTC');
 		else spendDate = new Date();
 
-		console.log(selection);
-
-		const expense = {
+		validation = Schema.safeParse({
 			name,
 			amount,
-			payDate: spendDate,
-			spendDate,
-			category: null
-		};
-
-		if (typeof selection.value !== 'undefined') expense.category = selection.value;
-
-		const validation = Schema.safeParse({
-			name,
-			amount,
-			category: selection.value,
+			category: selection?.value,
 			payDate: spendDate,
 			spendDate
 		});
@@ -74,6 +63,7 @@
 <div class="p-4">
 	<fieldset>
 		<p>{status}</p>
+		<p>{validation?.error.issues[0].message}</p>
 		<legend>Add new expense</legend>
 		<Label>
 			Name:

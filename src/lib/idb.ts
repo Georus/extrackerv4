@@ -5,17 +5,15 @@ export const Schema = z.object({
 	id: z.number().optional(),
 	amount: z.number().positive(),
 	name: z.string().min(1).max(50),
-	category: z
-		.enum(['food', 'pet', 'vehicle', 'housing', 'lifestyle'], {
-			errorMap: (issue, ctx) => ({ message: 'Select category needed' })
-		})
-		.nullable(),
+	category: z.enum(['food', 'pet', 'vehicle', 'housing', 'lifestyle'], {
+		errorMap: () => ({ message: 'Category selected required' })
+	}),
 	payDate: z.date(),
 	spendDate: z.date(),
 	description: z.string().min(1).max(300).optional()
 });
 
-type Expense = z.infer<typeof Schema>;
+export type Expense = z.infer<typeof Schema>;
 
 export class subDexie extends Dexie {
 	expenses!: Table<Expense>;
