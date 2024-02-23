@@ -88,7 +88,7 @@
 	<fieldset>
 		<p>{status}</p>
 		<p>{validation?.error?.issues[0].message}</p>
-		<legend>Add new expense</legend>
+		<legend>Eddit expense</legend>
 		<Label>
 			Name:
 			<Input bind:value={name} />

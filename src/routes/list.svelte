@@ -1,10 +1,30 @@
-<script>
+<script lang="ts">
 	import { liveQuery } from 'dexie';
 	import { db } from '$lib/idb';
 	import * as Accordion from '$lib/components/ui/accordion/';
 	import { ChevronDown } from 'lucide-svelte';
+	import * as Select from '$lib/components/ui/select/';
+	import { Label } from '$lib/components/ui/label';
 
-	let expenses = liveQuery(() => db.expenses.toArray());
+	let selection: Selection = {
+		value: new Date().getMonth().toString(),
+		label: 'February'
+	};
+	let monFilter = new Date().getMonth();
+
+	$: expenses = liveQuery(() => {
+		const expenses = db.expenses.filter((exp) => exp.spendDate.getMonth() === monFilter).toArray();
+		return expenses;
+	});
+
+	interface Selection {
+		value: string;
+		label: string;
+	}
+
+	function filterMonth(event: any) {
+		monFilter = parseInt(event.value);
+	}
 </script>
 
 <ul>
@@ -29,3 +49,16 @@
 		</Accordion.Root>
 	{/if}
 </ul>
+<Label>
+	Filter expenses:
+	<Select.Root bind:selected={selection} onSelectedChange={filterMonth}>
+		<Select.Trigger>
+			<Select.Value placeholder="Month"></Select.Value>
+		</Select.Trigger>
+		<Select.Content>
+			<Select.Item value="0">January</Select.Item>
+			<Select.Item value="1">February</Select.Item>
+			<Select.Item value="2">March</Select.Item>
+		</Select.Content>
+	</Select.Root>
+</Label>
