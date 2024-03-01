@@ -3,14 +3,15 @@ import { z } from 'zod';
 
 export const Schema = z.object({
 	id: z.number().optional(),
-	amount: z.coerce.number().positive(),
+	amount: z.coerce.number(),
 	name: z.string().min(1).max(50),
 	category: z.enum(['food', 'pet', 'vehicle', 'housing', 'lifestyle'], {
 		errorMap: () => ({ message: 'Category selected required' })
 	}),
 	payDate: z.date(),
 	spendDate: z.date(),
-	description: z.string().min(1).max(300).optional()
+	description: z.string().min(1).max(300).optional(),
+	account: z.number().min(0)
 });
 
 export type Expense = z.infer<typeof Schema>;

@@ -1,26 +1,18 @@
-<script>
-	import { db } from '$lib/idb';
+<script lang="ts">
+	import type { Expense } from '$lib/idb';
 
-	let debit = 10000;
-	let credit = 32000;
+	export let expenses: Expense[];
 
-	// db.expenses
-	// 	.filter((exp) => exp.spendDate.getMonth() === 2)
-	// 	.toArray()
-	// 	.then((exps) => {
-	// 		for (const exp of exps) {
-	// 			console.log(exp);
-	// 		}
-	// 	});
+	let balance = expenses.reduce((acc, curr) => acc + curr.amount, 0);
 </script>
 
 <div class="grid grid-cols-2 gap-2">
-	<div class="flex justify-between rounded bg-blue-600 p-1">
+	<button on:click={() => console.log('hi')} class="flex justify-between rounded bg-blue-600 p-1">
 		<span>Debit</span>
-		<span>{debit}</span>
-	</div>
-	<div class="flex justify-between rounded bg-yellow-600 p-1">
+		<span>{balance}</span>
+	</button>
+	<button class="flex justify-between rounded bg-yellow-600 p-1">
 		<span>Credit</span>
-		<span>{credit}</span>
-	</div>
+		<span>{balance}</span>
+	</button>
 </div>

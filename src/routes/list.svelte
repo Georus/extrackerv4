@@ -1,41 +1,35 @@
 <script lang="ts">
-	import { liveQuery } from 'dexie';
-	import { db } from '$lib/idb';
 	import * as Accordion from '$lib/components/ui/accordion/';
-	import { ChevronDown } from 'lucide-svelte';
-	import * as Select from '$lib/components/ui/select/';
 	import { Label } from '$lib/components/ui/label';
+	import * as Select from '$lib/components/ui/select/';
+	import { type Expense } from '$lib/idb';
+	import { ChevronDown } from 'lucide-svelte';
 
-	let selection: Selection = {
+	export let expenses: Expense[];
+
+	let selection = {
 		value: new Date().getMonth().toString(),
 		label: 'February'
 	};
+
 	let monFilter = new Date().getMonth();
 
-	$: expenses = liveQuery(() => {
-		const expenses = db.expenses.filter((exp) => exp.spendDate.getMonth() === monFilter).toArray();
-		return expenses;
-	});
-
-	interface Selection {
-		value: string;
-		label: string;
-	}
+	let expenseList = expenses.filter((exp) => exp.spendDate.getMonth() === monFilter);
 
 	function filterMonth(event: any) {
-		monFilter = parseInt(event.value);
+		expenseList = expenses.filter((exp) => exp.spendDate.getMonth() === parseInt(event.value));
 	}
 </script>
 
-<ul>
-	{#if $expenses}
+{#if expenseList}
+	<ul>
 		<Accordion.Root class="w-full sm:max-w-[70%]">
-			{#each $expenses as exp (exp.id)}
+			{#each expenseList as exp (exp.id)}
 				<Accordion.Item value={exp.id?.toString() || ''}>
 					<Accordion.Trigger class="">
 						<span>{exp.name} </span>
 						<span class="flex items-center">
-							<span class="text-red-500">-{exp.amount}</span>
+							<span class="text-red-500">{exp.amount}</span>
 							<ChevronDown class="h-4 w-4 transition-transform duration-200" />
 						</span>
 					</Accordion.Trigger>
@@ -47,8 +41,9 @@
 				</Accordion.Item>
 			{/each}
 		</Accordion.Root>
-	{/if}
-</ul>
+	</ul>
+{/if}
+
 <Label>
 	Filter expenses:
 	<Select.Root bind:selected={selection} onSelectedChange={filterMonth}>

@@ -42,7 +42,7 @@
 	"type": "module",
 	"dependencies": {
 		"@internationalized/date": "^3.5.2",
-		"bits-ui": "^0.18.1",
+		"bits-ui": "^0.18.2",
 		"chart.js": "^4.4.1",
 		"clsx": "^2.1.0",
 		"dexie": "^4.0.1-beta.10",

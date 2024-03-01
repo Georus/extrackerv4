@@ -6,6 +6,7 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Select from '$lib/components/ui/select/index';
+	import * as RadioGroup from '$lib/components/ui/radio-group';
 	import { Schema, db } from '$lib/idb';
 	import { cn } from '$lib/utils';
 	import { DateFormatter, getLocalTimeZone, type DateValue } from '@internationalized/date';
@@ -13,9 +14,10 @@
 
 	let value: DateValue | undefined = undefined;
 	let name = 'torito';
-	let amount = 800;
+	let amount: number;
 	let status = '';
 	let selection: Selection;
+	let transaction = 'expense';
 	let validation: any;
 
 	interface Selection {
@@ -39,23 +41,20 @@
 			amount,
 			category: selection?.value,
 			payDate: spendDate,
-			spendDate
+			spendDate,
+			account: 0
 		});
-		console.log(validation);
+		console.log(validation.success);
+		if (validation.success) {
+			console.log('trying to add');
+			try {
+				const id = await db.expenses.add(validation.data);
 
-		try {
-			const id = await db.expenses.add({
-				name,
-				amount,
-				category: selection.value,
-				payDate: spendDate,
-				spendDate
-			});
-
-			status = `Friend ${name} successfully added. Got id ${id}`;
-			goto('/');
-		} catch (error) {
-			status = `failed to add ${name}`;
+				status = `Friend ${name} successfully added. Got id ${id}`;
+				goto('/');
+			} catch (error) {
+				status = `failed to add ${name}`;
+			}
 		}
 	}
 </script>
@@ -90,6 +89,22 @@
 			</Select.Root>
 		</Label>
 		<br />
+		<RadioGroup.Root bind:value={transaction} class="flex space-x-2">
+			<div class="flex items-center space-x-2">
+				<RadioGroup.Item value="expense" id="r1" />
+				<Label for="r1">Expense</Label>
+			</div>
+			<div class="flex items-center space-x-2">
+				<RadioGroup.Item value="income" id="r2" />
+				<Label for="r2">Income</Label>
+			</div>
+			<div class="flex items-center space-x-2">
+				<RadioGroup.Item value="transfer" id="r3" />
+				<Label for="r3">Transfer</Label>
+			</div>
+			<RadioGroup.Input name="spacing" />
+		</RadioGroup.Root>
+		<br />
 		<Popover.Root>
 			<Popover.Trigger asChild let:builder>
 				<Button
@@ -110,4 +125,5 @@
 		</Popover.Root>
 		<Button class="mt-4" on:click={addExpense}>Add Expense</Button>
 	</fieldset>
+	<button on:click={() => console.log(transaction)}>test</button>
 </div>
