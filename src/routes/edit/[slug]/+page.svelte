@@ -54,24 +54,28 @@
 			amount,
 			category: selection?.value,
 			payDate: spendDate,
-			spendDate
+			spendDate,
+			account: 0
 		});
 		console.log(validation);
 
-		try {
-			const id = await db.expenses.put({
-				id: parseInt(data.exp.id),
-				name,
-				amount,
-				category: selection.value,
-				payDate: spendDate,
-				spendDate
-			});
+		if (validation.success) {
+			try {
+				const id = await db.expenses.put({
+					id: parseInt(data.exp.id),
+					name,
+					amount: typeof amount === 'string' ? parseInt(amount) : amount,
+					category: selection.value,
+					payDate: spendDate,
+					spendDate,
+					account: 0
+				});
 
-			status = `Friend ${name} successfully added. Got id ${id}`;
-			goto('/');
-		} catch (error) {
-			status = `failed to add ${name}`;
+				status = `Friend ${name} successfully added. Got id ${id}`;
+				goto('/');
+			} catch (error) {
+				status = `failed to add ${name}`;
+			}
 		}
 	}
 	async function delExpense() {

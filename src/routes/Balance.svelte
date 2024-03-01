@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Expense } from '$lib/idb';
+	import { Cog } from 'lucide-svelte';
 
 	export let expenses: Expense[];
 
@@ -14,5 +15,9 @@
 	<button class="flex justify-between rounded bg-yellow-600 p-1">
 		<span>Credit</span>
 		<span>{balance}</span>
+	</button>
+	<button class="flex justify-between rounded bg-yellow-600 p-1">
+		<span>Add account</span>
+		<Cog />
 	</button>
 </div>

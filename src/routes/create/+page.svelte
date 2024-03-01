@@ -36,6 +36,8 @@
 		if (value) spendDate = value.toDate('UTC');
 		else spendDate = new Date();
 
+		if (transaction === 'expense') amount = amount * -1;
+
 		validation = Schema.safeParse({
 			name,
 			amount,
@@ -48,6 +50,7 @@
 		if (validation.success) {
 			console.log('trying to add');
 			try {
+				console.log(validation.data);
 				const id = await db.expenses.add(validation.data);
 
 				status = `Friend ${name} successfully added. Got id ${id}`;
@@ -89,7 +92,7 @@
 			</Select.Root>
 		</Label>
 		<br />
-		<RadioGroup.Root bind:value={transaction} class="flex space-x-2">
+		<RadioGroup.Root bind:value={transaction} class="flex justify-between px-4">
 			<div class="flex items-center space-x-2">
 				<RadioGroup.Item value="expense" id="r1" />
 				<Label for="r1">Expense</Label>

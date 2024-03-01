@@ -15,6 +15,7 @@
 	let monFilter = new Date().getMonth();
 
 	let expenseList = expenses.filter((exp) => exp.spendDate.getMonth() === monFilter);
+	console.log(expenseList);
 
 	function filterMonth(event: any) {
 		expenseList = expenses.filter((exp) => exp.spendDate.getMonth() === parseInt(event.value));
