@@ -3,7 +3,7 @@
 	import { Cog } from 'lucide-svelte';
 
 	export let expenses: Expense[];
-
+	console.log(expenses);
 	let balance = expenses.reduce((acc, curr) => acc + curr.amount, 0);
 </script>
 

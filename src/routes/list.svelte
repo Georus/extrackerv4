@@ -1,25 +1,18 @@
 <script lang="ts">
 	import * as Accordion from '$lib/components/ui/accordion/';
-	import { Label } from '$lib/components/ui/label';
-	import * as Select from '$lib/components/ui/select/';
+	import Button from '$lib/components/ui/button/button.svelte';
 	import { type Expense } from '$lib/idb';
+	import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date';
 	import { ChevronDown } from 'lucide-svelte';
 
 	export let expenses: Expense[];
 
-	let selection = {
-		value: new Date().getMonth().toString(),
-		label: 'February'
-	};
+	let topay = new Date();
+	let date = today(getLocalTimeZone());
 
-	let monFilter = new Date().getMonth();
-
-	let expenseList = expenses.filter((exp) => exp.spendDate.getMonth() === monFilter);
-	console.log(expenseList);
-
-	function filterMonth(event: any) {
-		expenseList = expenses.filter((exp) => exp.spendDate.getMonth() === parseInt(event.value));
-	}
+	$: expenseList = expenses.filter(
+		(exp) => exp.spendDate.getMonth() === date.toDate(getLocalTimeZone()).getMonth()
+	);
 </script>
 
 {#if expenseList}
@@ -45,16 +38,14 @@
 	</ul>
 {/if}
 
-<Label>
-	Filter expenses:
-	<Select.Root bind:selected={selection} onSelectedChange={filterMonth}>
-		<Select.Trigger>
-			<Select.Value placeholder="Month"></Select.Value>
-		</Select.Trigger>
-		<Select.Content>
-			<Select.Item value="0">January</Select.Item>
-			<Select.Item value="1">February</Select.Item>
-			<Select.Item value="2">March</Select.Item>
-		</Select.Content>
-	</Select.Root>
-</Label>
+<div class="flex">
+	<Button on:click={() => (topay = new Date(topay.setMonth(topay.getMonth() - 1)))}>-</Button>
+	<div>{topay.toLocaleString('default', { month: 'long', year: 'numeric' })}</div>
+	<Button on:click={() => (topay = new Date(topay.setMonth(topay.getMonth() + 1)))}>+</Button>
+</div>
+
+<div>
+	<Button on:click={() => date.subtract({ months: 1 })}>-</Button>
+	{date.toDate(getLocalTimeZone()).toLocaleString('default', { month: 'long', year: 'numeric' })}
+	<Button on:click={() => date.add({ months: 1 })}>+</Button>
+</div>
