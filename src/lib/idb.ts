@@ -16,14 +16,29 @@ export const Schema = z.object({
 
 export type Expense = z.infer<typeof Schema>;
 
+export const accSchema = z.object({
+	id: z.number().optional(),
+	name: z.string().min(1),
+	type: z.enum(['debit', 'credit', 'savings']),
+	balance: z.number().min(0).optional(),
+	color: z.string(),
+	rate: z.number().min(0).optional(),
+	cut: z.number().min(1).optional()
+});
+
+export type Account = z.infer<typeof accSchema>;
+
 export class subDexie extends Dexie {
 	expenses!: Table<Expense>;
+	accounts!: Table<Account>;
 
 	constructor() {
 		super('LocalExp');
 		this.version(1).stores({
-			expenses: '++id, amount, name, category, payDate, spendDate, description'
+			expenses: '++id, amount, name, category, payDate, spendDate, description, account',
+			accounts: '++id, name, type, balance, color, rate, cut'
 		});
 	}
 }
+
 export const db = new subDexie();

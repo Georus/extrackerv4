@@ -3,11 +3,10 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { type Expense } from '$lib/idb';
 	import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date';
-	import { ChevronDown } from 'lucide-svelte';
+	import { ChevronDown, Minus, Plus } from 'lucide-svelte';
 
 	export let expenses: Expense[];
 
-	let topay = new Date();
 	let date = today(getLocalTimeZone());
 
 	$: expenseList = expenses.filter(
@@ -38,14 +37,14 @@
 	</ul>
 {/if}
 
-<div class="flex">
-	<Button on:click={() => (topay = new Date(topay.setMonth(topay.getMonth() - 1)))}>-</Button>
-	<div>{topay.toLocaleString('default', { month: 'long', year: 'numeric' })}</div>
-	<Button on:click={() => (topay = new Date(topay.setMonth(topay.getMonth() + 1)))}>+</Button>
-</div>
-
-<div>
-	<Button on:click={() => date.subtract({ months: 1 })}>-</Button>
-	{date.toDate(getLocalTimeZone()).toLocaleString('default', { month: 'long', year: 'numeric' })}
-	<Button on:click={() => date.add({ months: 1 })}>+</Button>
+<div class="flex items-center justify-center">
+	<div class=" flex items-center border-4">
+		<Button size="icon" on:click={() => (date = date.subtract({ months: 1 }))}><Minus /></Button>
+		<span class="mx-2">
+			{date
+				.toDate(getLocalTimeZone())
+				.toLocaleString('default', { month: 'long', year: 'numeric' })}
+		</span>
+		<Button size="icon" on:click={() => (date = date.add({ months: 1 }))}><Plus /></Button>
+	</div>
 </div>

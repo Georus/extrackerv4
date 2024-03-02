@@ -6,17 +6,18 @@
 	import List from './list.svelte';
 
 	async function getExps() {
-		return await db.expenses.toArray();
+		const expenses = await db.expenses.toArray();
+		const accounts = await db.accounts.toArray();
+		return { expenses, accounts };
 	}
 </script>
 
 <main class="p-4">
 	<h1>Welcome to SvelteKit</h1>
-	<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-	{#await getExps() then expenses}
-		<Balance {expenses} />
+	{#await getExps() then results}
+		<Balance expenses={results.expenses} accounts={results.accounts} />
 		<Button href="/create">Create</Button>
-		<List {expenses} />
+		<List expenses={results.expenses} />
 	{/await}
 	<Chart />
 </main>

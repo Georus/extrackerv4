@@ -9,10 +9,10 @@
 	import * as RadioGroup from '$lib/components/ui/radio-group';
 	import { Schema, db } from '$lib/idb';
 	import { cn } from '$lib/utils';
-	import { DateFormatter, getLocalTimeZone, type DateValue } from '@internationalized/date';
+	import { today, DateFormatter, getLocalTimeZone, type DateValue } from '@internationalized/date';
 	import { Calendar as CalendarIcon } from 'lucide-svelte';
 
-	let value: DateValue | undefined = undefined;
+	let value: DateValue | undefined = today(getLocalTimeZone());
 	let name = 'torito';
 	let amount: number;
 	let status = '';
@@ -46,14 +46,12 @@
 			spendDate,
 			account: 0
 		});
-		console.log(validation.success);
+		console.log(validation);
 		if (validation.success) {
 			console.log('trying to add');
 			try {
 				console.log(validation.data);
 				const id = await db.expenses.add(validation.data);
-
-				status = `Friend ${name} successfully added. Got id ${id}`;
 				goto('/');
 			} catch (error) {
 				status = `failed to add ${name}`;

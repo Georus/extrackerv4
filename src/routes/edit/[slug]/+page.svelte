@@ -50,26 +50,20 @@
 		else spendDate = new Date();
 
 		validation = Schema.safeParse({
+			id: parseInt(data.exp.id),
 			name,
 			amount,
 			category: selection?.value,
 			payDate: spendDate,
 			spendDate,
-			account: 0
+			account: 0,
+			accType: 'debit'
 		});
 		console.log(validation);
 
 		if (validation.success) {
 			try {
-				const id = await db.expenses.put({
-					id: parseInt(data.exp.id),
-					name,
-					amount: typeof amount === 'string' ? parseInt(amount) : amount,
-					category: selection.value,
-					payDate: spendDate,
-					spendDate,
-					account: 0
-				});
+				const id = await db.expenses.put(validation.data);
 
 				status = `Friend ${name} successfully added. Got id ${id}`;
 				goto('/');
