@@ -5,19 +5,33 @@
 	import { Label } from '$lib/components/ui/label';
 	import * as RadioGroup from '$lib/components/ui/radio-group';
 	import { accSchema, db } from '$lib/idb';
-	import { Save } from 'lucide-svelte';
+	import { Save, Trash } from 'lucide-svelte';
+
+	export let data;
 
 	let name: string;
 	let type: string;
 	let balance = 0;
 	let color: string;
-	let rate: number;
-	let cut: number;
+	let rate: number | undefined;
+	let cut: number | undefined;
 
 	let validation: any;
 
-	async function addAccount() {
+	db.accounts.get(parseInt(data.acc.id)).then((acc) => {
+		if (acc) {
+			name = acc.name;
+			type = acc.type;
+			balance = acc.balance || 0;
+			color = acc.color;
+			rate = acc.rate;
+			cut = acc.cut;
+		}
+	});
+
+	async function putAccount() {
 		validation = accSchema.safeParse({
+			id: parseInt(data.acc.id),
 			name,
 			type,
 			balance,
@@ -30,18 +44,29 @@
 			console.log('trying to add');
 			try {
 				console.log(validation.data);
-				await db.accounts.add(validation.data);
+				await db.accounts.put(validation.data);
 				goto('/');
 			} catch (error) {
 				console.error(error);
 			}
 		}
 	}
+
+	async function delAccount() {
+		try {
+			await db.accounts.delete(parseInt(data.acc.id));
+			goto('/');
+		} catch (error) {
+			console.error(error);
+		}
+	}
 </script>
 
 <section class="p-4">
-	<div class="flex justify-end">
-		<Button on:click={addAccount}><Save /></Button>
+	<div class="flex justify-end space-x-2">
+		<Button variant="destructive" on:click={delAccount}><Trash /></Button>
+
+		<Button on:click={putAccount}><Save /></Button>
 	</div>
 	<Label>
 		Name:*

@@ -11,7 +11,7 @@ export const Schema = z.object({
 	payDate: z.date(),
 	spendDate: z.date(),
 	description: z.string().min(1).max(300).optional(),
-	account: z.number().min(0)
+	account: z.coerce.number().min(0)
 });
 
 export type Expense = z.infer<typeof Schema>;
@@ -20,10 +20,10 @@ export const accSchema = z.object({
 	id: z.number().optional(),
 	name: z.string().min(1),
 	type: z.enum(['debit', 'credit', 'savings']),
-	balance: z.number().min(0).optional(),
+	balance: z.coerce.number().min(0).optional(),
 	color: z.string(),
-	rate: z.number().min(0).optional(),
-	cut: z.number().min(1).optional()
+	rate: z.coerce.number().min(0).optional(),
+	cut: z.coerce.number().min(1).optional()
 });
 
 export type Account = z.infer<typeof accSchema>;

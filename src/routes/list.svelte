@@ -14,6 +14,17 @@
 	);
 </script>
 
+<div class="flex items-center justify-center">
+	<div class=" flex items-center border-4">
+		<Button size="icon" on:click={() => (date = date.subtract({ months: 1 }))}><Minus /></Button>
+		<span class="mx-2">
+			{date
+				.toDate(getLocalTimeZone())
+				.toLocaleString('default', { month: 'long', year: 'numeric' })}
+		</span>
+		<Button size="icon" on:click={() => (date = date.add({ months: 1 }))}><Plus /></Button>
+	</div>
+</div>
 {#if expenseList}
 	<ul>
 		<Accordion.Root class="w-full sm:max-w-[70%]">
@@ -36,15 +47,3 @@
 		</Accordion.Root>
 	</ul>
 {/if}
-
-<div class="flex items-center justify-center">
-	<div class=" flex items-center border-4">
-		<Button size="icon" on:click={() => (date = date.subtract({ months: 1 }))}><Minus /></Button>
-		<span class="mx-2">
-			{date
-				.toDate(getLocalTimeZone())
-				.toLocaleString('default', { month: 'long', year: 'numeric' })}
-		</span>
-		<Button size="icon" on:click={() => (date = date.add({ months: 1 }))}><Plus /></Button>
-	</div>
-</div>
