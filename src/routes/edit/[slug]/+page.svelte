@@ -7,6 +7,7 @@
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Select from '$lib/components/ui/select/index';
 	import { Schema, db } from '$lib/idb';
+	import { selAccount } from '$lib/store.js';
 	import { cn } from '$lib/utils';
 	import { DateFormatter, getLocalTimeZone, type DateValue } from '@internationalized/date';
 	import { Calendar as CalendarIcon } from 'lucide-svelte';
@@ -56,7 +57,7 @@
 			category: selection?.value,
 			payDate: spendDate,
 			spendDate,
-			account: 0,
+			account: $selAccount,
 			accType: 'debit'
 		});
 		console.log(validation);

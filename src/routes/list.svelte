@@ -2,15 +2,21 @@
 	import * as Accordion from '$lib/components/ui/accordion/';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { type Expense } from '$lib/idb';
-	import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date';
+	import { selAccount } from '$lib/store';
+	import { today, getLocalTimeZone } from '@internationalized/date';
 	import { ChevronDown, Minus, Plus } from 'lucide-svelte';
 
 	export let expenses: Expense[];
 
 	let date = today(getLocalTimeZone());
 
+	console.log(expenses);
+	console.log($selAccount);
+
 	$: expenseList = expenses.filter(
-		(exp) => exp.spendDate.getMonth() === date.toDate(getLocalTimeZone()).getMonth()
+		(exp) =>
+			exp.spendDate.getMonth() === date.toDate(getLocalTimeZone()).getMonth() &&
+			exp.account === $selAccount
 	);
 </script>
 

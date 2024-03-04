@@ -11,6 +11,7 @@
 	import { cn } from '$lib/utils';
 	import { today, DateFormatter, getLocalTimeZone, type DateValue } from '@internationalized/date';
 	import { Calendar as CalendarIcon } from 'lucide-svelte';
+	import { selAccount } from '$lib/store';
 
 	let value: DateValue | undefined = today(getLocalTimeZone());
 	let name = 'torito';
@@ -44,7 +45,7 @@
 			category: selection?.value,
 			payDate: spendDate,
 			spendDate,
-			account: 0
+			account: $selAccount
 		});
 		console.log(validation);
 		if (validation.success) {

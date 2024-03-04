@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import type { Account, Expense } from '$lib/idb';
+	import { selAccount } from '$lib/store';
 	import { Cog, PlusCircle } from 'lucide-svelte';
 
 	export let expenses: Expense[];
@@ -16,7 +17,7 @@
 <div class="grid grid-cols-2 gap-2">
 	{#each accounts as account}
 		<Button
-			on:click={() => console.log('hi')}
+			on:click={() => ($selAccount = account.id || 0)}
 			class="flex justify-between rounded p-1 text-white"
 			style={'background-color:' + account.color}
 		>
