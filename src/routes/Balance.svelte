@@ -19,7 +19,7 @@
 		<Button
 			on:click={() => ($selAccount = account.id || 0)}
 			class="flex justify-between rounded p-1 text-white"
-			style={'background-color:' + account.color}
+			style={'background-color:' + (account.id === $selAccount ? account.color : 'gray')}
 		>
 			<span>{account.name}</span>
 			<span>{balance}</span>

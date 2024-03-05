@@ -14,7 +14,7 @@
 	import { selAccount } from '$lib/store';
 
 	let value: DateValue | undefined = today(getLocalTimeZone());
-	let name = 'torito';
+	let name: string;
 	let amount: number;
 	let status = '';
 	let selection: Selection;
@@ -52,7 +52,7 @@
 			console.log('trying to add');
 			try {
 				console.log(validation.data);
-				const id = await db.expenses.add(validation.data);
+				await db.expenses.add(validation.data);
 				goto('/');
 			} catch (error) {
 				status = `failed to add ${name}`;
@@ -63,9 +63,7 @@
 
 <div class="p-4">
 	<fieldset>
-		<p>{status}</p>
-		<p>{validation?.error?.issues[0].message}</p>
-		<legend>Add new expense</legend>
+		<legend class="my-1 text-lg font-semibold">Add new expense</legend>
 		<Label>
 			Name:
 			<Input bind:value={name} />

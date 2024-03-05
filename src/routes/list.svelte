@@ -4,7 +4,7 @@
 	import { type Expense } from '$lib/idb';
 	import { selAccount } from '$lib/store';
 	import { today, getLocalTimeZone } from '@internationalized/date';
-	import { ChevronDown, Minus, Plus } from 'lucide-svelte';
+	import { ChevronDown, Minus, Plus, SquarePen } from 'lucide-svelte';
 
 	export let expenses: Expense[];
 
@@ -43,10 +43,11 @@
 							<ChevronDown class="h-4 w-4 transition-transform duration-200" />
 						</span>
 					</Accordion.Trigger>
-					<Accordion.Content>
-						{exp.payDate}
-						<a href={'edit/' + exp.id?.toString()}>edit</a>
-						<span>{exp.id}</span>
+					<Accordion.Content class=" flex items-center">
+						<span>{exp.payDate.toLocaleString()}</span>
+						<Button variant="secondary" size="icon" href={'edit/' + exp.id?.toString()}>
+							<SquarePen />
+						</Button>
 					</Accordion.Content>
 				</Accordion.Item>
 			{/each}

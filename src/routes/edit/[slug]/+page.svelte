@@ -6,10 +6,16 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Select from '$lib/components/ui/select/index';
+	import * as RadioGroup from '$lib/components/ui/radio-group';
 	import { Schema, db } from '$lib/idb';
 	import { selAccount } from '$lib/store.js';
 	import { cn } from '$lib/utils';
-	import { DateFormatter, getLocalTimeZone, type DateValue } from '@internationalized/date';
+	import {
+		DateFormatter,
+		getLocalTimeZone,
+		type DateValue,
+		CalendarDate
+	} from '@internationalized/date';
 	import { Calendar as CalendarIcon } from 'lucide-svelte';
 	export let data;
 
@@ -18,6 +24,9 @@
 	let amount: number;
 	let status: string;
 	let selection: Selection;
+	let transaction: string;
+	let account: number;
+
 	let validation: any;
 
 	async function getExp() {
@@ -30,6 +39,14 @@
 				label: expense.category.charAt(0).toUpperCase() + expense.category.slice(1),
 				disabled: false
 			};
+			if (expense.amount < 0) transaction = 'expense';
+			else transaction = 'income';
+			value = new CalendarDate(
+				expense.spendDate.getFullYear(),
+				expense.spendDate.getMonth() + 1,
+				expense.spendDate.getDate()
+			);
+			account = expense.account;
 		}
 	}
 	getExp();
@@ -57,8 +74,7 @@
 			category: selection?.value,
 			payDate: spendDate,
 			spendDate,
-			account: $selAccount,
-			accType: 'debit'
+			account
 		});
 		console.log(validation);
 
@@ -85,9 +101,7 @@
 
 <div class="p-4">
 	<fieldset>
-		<p>{status}</p>
-		<p>{validation?.error?.issues[0].message}</p>
-		<legend>Eddit expense</legend>
+		<legend class="my-1 text-lg font-semibold">Edit expense</legend>
 		<Label>
 			Name:
 			<Input bind:value={name} />
@@ -96,6 +110,11 @@
 		<Label>
 			Amount:
 			<Input type="number" bind:value={amount} />
+		</Label>
+		<br />
+		<Label>
+			Account:
+			<Input type="number" bind:value={account} />
 		</Label>
 		<br />
 		<Label>
@@ -113,6 +132,23 @@
 			</Select.Root>
 		</Label>
 		<br />
+		<RadioGroup.Root bind:value={transaction} class="flex justify-between px-4">
+			<div class="flex items-center space-x-2">
+				<RadioGroup.Item value="expense" id="r1" />
+				<Label for="r1">Expense</Label>
+			</div>
+			<div class="flex items-center space-x-2">
+				<RadioGroup.Item value="income" id="r2" />
+				<Label for="r2">Income</Label>
+			</div>
+			<div class="flex items-center space-x-2">
+				<RadioGroup.Item value="transfer" id="r3" />
+				<Label for="r3">Transfer</Label>
+			</div>
+			<RadioGroup.Input name="spacing" />
+		</RadioGroup.Root>
+		<br />
+
 		<Popover.Root>
 			<Popover.Trigger asChild let:builder>
 				<Button
